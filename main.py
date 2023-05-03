@@ -10,6 +10,7 @@ from pydantic import HttpUrl
 
 # fastapi
 from fastapi import FastAPI
+from fastapi import status
 from fastapi import Body
 from fastapi import Path
 from fastapi import Query
@@ -71,7 +72,7 @@ class PersonOut(PersonBase):
     
 
 
-@app.get('/')
+@app.get('/', status_code=status.HTTP_200_OK)
 def home():
     return {
         'Hello': 'World'
@@ -80,13 +81,13 @@ def home():
 
 # request and response
 
-@app.post('/person/new', response_model=PersonOut)
+@app.post('/person/new', status_code=status.HTTP_201_CREATED ,response_model=PersonOut)
 def create_person(person: Person = Body()):
     return person
 
 # validaciones: query parameters
 
-@app.get('/person/detail')
+@app.get('/person/detail', status_code=status.HTTP_200_OK)
 def show_person(
     name: Optional[str] = Query(None, min_length=1, max_length=50, title='Person Name', 
                                 description='This is the person name. It"s between 1 and 50 characters', 
@@ -98,7 +99,7 @@ def show_person(
     }
 
 
-@app.get('/person/detail/{person_id}')
+@app.get('/person/detail/{person_id}', status_code=status.HTTP_200_OK)
 def show_person(
     person_id: int = Path(gt=0, example=15)
 
@@ -107,7 +108,7 @@ def show_person(
 
 # validaciones: request body
 
-@app.put('/person/{person_id}')
+@app.put('/person/{person_id}', status_code=status.HTTP_201_CREATED)
 def update_person(person_id: int = Path(title='Person ID', description='This is the person ID', gt=0, example=23), 
                 person: Person = Body(),
                 location: Location = Body()):
