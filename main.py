@@ -41,7 +41,7 @@ class Location(BaseModel):
             }
         }
 
-class BasePerson(BaseModel):
+class PersonBase(BaseModel):
     first_name: str = Field(min_length=1, max_length=50, example='Facundo')
     last_name: str = Field(min_length=1, max_length=50, example='Garcia')
     age: int = Field(gt=0, le=115, example=21)
@@ -50,14 +50,7 @@ class BasePerson(BaseModel):
     email: EmailStr = Field(example='correo@gmail.com')
     social_link: HttpUrl = Field(example='http://socialred.com/user')
 
-class Person(BasePerson):
-    first_name: str = Field(min_length=1, max_length=50, example='Facundo')
-    last_name: str = Field(min_length=1, max_length=50, example='Garcia')
-    age: int = Field(gt=0, le=115, example=21)
-    hair_color: Optional[HairColor] = Field(default=None, example='black') # establecer un valo por defecto un parametro opcional
-    is_married: Optional[bool] = Field(default=None, example=False)
-    email: EmailStr = Field(example='correo@gmail.com')
-    social_link: HttpUrl = Field(example='http://socialred.com/user')
+class Person(PersonBase):
     password: str = Field(min_length=8, example='hmjscdewfj')
 
 
@@ -73,14 +66,8 @@ class Person(BasePerson):
     #         }
     #     }
 
-class PersonOut(BaseModel):
-    first_name: str = Field(min_length=1, max_length=50, example='Facundo')
-    last_name: str = Field(min_length=1, max_length=50, example='Garcia')
-    age: int = Field(gt=0, le=115, example=21)
-    hair_color: Optional[HairColor] = Field(default=None, example='black') # establecer un valo por defecto un parametro opcional
-    is_married: Optional[bool] = Field(default=None, example=False)
-    email: EmailStr = Field(example='correo@gmail.com')
-    social_link: HttpUrl = Field(example='http://socialred.com/user')
+class PersonOut(PersonBase):
+    ... # es lo mismo que pass
     
 
 
@@ -93,7 +80,7 @@ def home():
 
 # request and response
 
-@app.post('/person/new', response_model=Person, response_model_exclude={'password'})
+@app.post('/person/new', response_model=PersonOut)
 def create_person(person: Person = Body()):
     return person
 
