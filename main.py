@@ -14,6 +14,7 @@ from fastapi import status
 from fastapi import Body
 from fastapi import Path
 from fastapi import Query
+from fastapi import Form
 
 app = FastAPI()
 
@@ -69,7 +70,10 @@ class Person(PersonBase):
 
 class PersonOut(PersonBase):
     ... # es lo mismo que pass
-    
+
+class LoginOut(BaseModel):
+    username: str = Field(max_length=20, example='Miguel06')
+    message: str = Field(default='Login Succesfuly!')
 
 
 @app.get('/', status_code=status.HTTP_200_OK)
@@ -131,3 +135,11 @@ def update_person(person_id: int = Path(title='Person ID', description='This is 
 
     #     'location': location.dict()
     # }
+
+
+@app.post('/login', response_model=LoginOut, status_code=status.HTTP_200_OK)
+def login(username: str = Form(), password: str = Form()):
+    # login = LoginOut(username=username)
+    # return login
+
+    return LoginOut(username=username)
