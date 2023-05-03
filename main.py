@@ -5,6 +5,8 @@ from enum import Enum
 # pydantic
 from pydantic import BaseModel
 from pydantic import Field
+from pydantic import EmailStr
+from pydantic import HttpUrl
 
 # fastapi
 from fastapi import FastAPI
@@ -24,16 +26,41 @@ class HairColor(Enum):
     red = 'red'
 
 class Location(BaseModel):
-    city: str
-    state: str
-    country: str
+    city: str = Field(max_length=50)
+    state: str = Field(max_lenght=50)
+    country: str = Field(max_length=50)
+
+    class Config:
+        schema_extra = {
+            'example': {
+                'city': 'New York City',
+                'state': 'New York',
+                'country': 'EEUU'
+            }
+        }
 
 class Person(BaseModel):
-    first_name: str = Field(min_length=1, max_length=50)
-    last_name: str = Field(min_length=1, max_length=50)
-    age: int = Field(gt=0, le=115)
-    hair_color: Optional[HairColor] = Field(default=None) # establecer un valo por defecto un parametro opcional
-    is_married: Optional[bool] = Field(default=None)
+    first_name: str = Field(min_length=1, max_length=50, example='Facundo')
+    last_name: str = Field(min_length=1, max_length=50, example='Garcia')
+    age: int = Field(gt=0, le=115, example=21)
+    hair_color: Optional[HairColor] = Field(default=None, example='black') # establecer un valo por defecto un parametro opcional
+    is_married: Optional[bool] = Field(default=None, example=False)
+    email: EmailStr = Field(example='correo@gmail.com')
+    social_link: HttpUrl = Field(example='http://socialred.com/user')
+
+
+    # class Config:
+    #     schema_extra = {
+    #         'example': {
+    #             'first_name': 'Facundo',
+    #             'last_name': 'Garcia',
+    #             'age': 21,
+    #             'hair_color': 'blonde',
+    #             'is_married': False,
+    #             'email': 'example@gmail.com'
+    #         }
+    #     }
+
 
 @app.get('/')
 def home():
