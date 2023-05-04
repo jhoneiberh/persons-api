@@ -13,6 +13,8 @@ from fastapi import FastAPI
 from fastapi import status
 from fastapi import Body
 from fastapi import Path
+from fastapi import UploadFile
+from fastapi import File
 from fastapi import Query
 from fastapi import Form
 from fastapi import Header
@@ -157,3 +159,15 @@ def contact(first_name: str = Form(max_length=20, min_length=1),
             user_agent: Optional[str] = Header(default=None),
             ads: Optional[str] = Cookie(default=None)):
     return user_agent
+
+
+# Files
+
+@app.post('/post-image')
+def post_image(image: UploadFile = File()):
+    return {
+        'Filename': image.filename,
+        'Format': image.content_type,
+        # 'Size(kB)': round( len(image.file.read()) / 1000, ndigits=1)
+        'Size(kB)': round(image.size / 1000, ndigits=1)
+    }
