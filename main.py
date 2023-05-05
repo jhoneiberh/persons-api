@@ -81,7 +81,7 @@ class LoginOut(BaseModel):
     message: str = Field(default='Login Succesfuly!')
 
 
-@app.get('/', status_code=status.HTTP_200_OK)
+@app.get('/', status_code=status.HTTP_200_OK, tags=['Home'])
 def home():
     return {
         'Hello': 'World'
@@ -90,13 +90,21 @@ def home():
 
 # request and response
 
-@app.post('/person/new', status_code=status.HTTP_201_CREATED ,response_model=PersonOut)
+@app.post('/person/new', status_code=status.HTTP_201_CREATED ,response_model=PersonOut, tags=['Persons'])
 def create_person(person: Person = Body()):
+    """_summary_
+
+    Args:
+        person (Person, optional): _description_. Defaults to Body().
+
+    Returns:
+        _type_: _description_
+    """
     return person
 
 # validaciones: query parameters
 
-@app.get('/person/detail', status_code=status.HTTP_200_OK)
+@app.get('/person/detail', status_code=status.HTTP_200_OK, tags=['Persons'])
 def show_person(
     name: Optional[str] = Query(None, min_length=1, max_length=50, title='Person Name', 
                                 description='This is the person name. It"s between 1 and 50 characters', 
@@ -111,7 +119,7 @@ def show_person(
 
 persons = [1, 2, 3, 4, 5]
 
-@app.get('/person/detail/{person_id}', status_code=status.HTTP_200_OK)
+@app.get('/person/detail/{person_id}', status_code=status.HTTP_200_OK, tags=['Persons'])
 def show_person(
     person_id: int = Path(gt=0, example=15)
 
@@ -126,7 +134,7 @@ def show_person(
 
 # validaciones: request body
 
-@app.put('/person/{person_id}', status_code=status.HTTP_201_CREATED)
+@app.put('/person/{person_id}', status_code=status.HTTP_201_CREATED, tags=['Persons'])
 def update_person(person_id: int = Path(title='Person ID', description='This is the person ID', gt=0, example=23), 
                 person: Person = Body(),
                 location: Location = Body()):
@@ -152,7 +160,7 @@ def update_person(person_id: int = Path(title='Person ID', description='This is 
 
 # Forms
 
-@app.post('/login', response_model=LoginOut, status_code=status.HTTP_200_OK)
+@app.post('/login', response_model=LoginOut, status_code=status.HTTP_200_OK, tags=['Persons'])
 def login(username: str = Form(), password: str = Form()):
     # login = LoginOut(username=username)
     # return login
@@ -161,7 +169,7 @@ def login(username: str = Form(), password: str = Form()):
 
 # Cookies and Headers Parameters
 
-@app.post('/contact', status_code=status.HTTP_200_OK)
+@app.post('/contact', status_code=status.HTTP_200_OK, tags=['Contact'])
 def contact(first_name: str = Form(max_length=20, min_length=1), 
             last_name: str = Form(max_length=20, min_length=1),
             email: EmailStr = Form(),
@@ -173,7 +181,7 @@ def contact(first_name: str = Form(max_length=20, min_length=1),
 
 # Files
 
-@app.post('/post-image')
+@app.post('/post-image', tags=['Files'])
 def post_image(image: UploadFile = File()):
     return {
         'Filename': image.filename,
