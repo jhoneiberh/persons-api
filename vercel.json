@@ -2,7 +2,7 @@
     "builds": [
         {
             "src": "/api/main.py",
-            "use": "python3.10"
+            "use": "python3.9"
         }
     ],
     "routes": [
