@@ -27,3 +27,4 @@ db.sqlite3-journal
 ### VisualStudioCode ###
 .vscode/
 .vscode/settings.json
+.vercel
