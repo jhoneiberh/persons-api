@@ -25,5 +25,5 @@ db.sqlite3-journal
 *.js
 
 ### VisualStudioCode ###
-.vscode/*
+.vscode/
 .vscode/settings.json

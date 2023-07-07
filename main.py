@@ -2,6 +2,7 @@
 # python
 from typing import Optional
 from enum import Enum
+import uvicorn
 
 # pydantic
 from pydantic import BaseModel
@@ -271,3 +272,6 @@ def post_image(image: UploadFile = File()):
         # 'Size(kB)': round( len(image.file.read()) / 1000, ndigits=1)
         'Size(kB)': round(image.size / 1000, ndigits=1)
     }
+
+if __name__ == "__main__":
+    uvicorn.run('main:app', host='localhost', port=8000, reload=True)
